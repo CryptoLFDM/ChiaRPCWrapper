@@ -66,7 +66,7 @@ def get_harvester_plots_valid():
     url = 'https://localhost:8559/get_harvester_plots_valid'
     cert = '{}/config/ssl/farmer/private_farmer.crt'.format(chia_root_path)
     key = '{}/config/ssl/farmer/private_farmer.key'.format(chia_root_path)
-    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 1}
+    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 999999}
     return make_request(url, cert, key, data)
 
 
@@ -75,7 +75,7 @@ def get_harvester_plots_invalid():
     url = 'https://localhost:8559/get_harvester_plots_invalid'
     cert = '{}/config/ssl/farmer/private_farmer.crt'.format(chia_root_path)
     key = '{}/config/ssl/farmer/private_farmer.key'.format(chia_root_path)
-    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 1}
+    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 999999}
     return make_request(url, cert, key, data)
 
 
