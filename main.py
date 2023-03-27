@@ -10,6 +10,7 @@ urllib3.disable_warnings()
 
 headers = {'Content-Type': 'application/json'}
 chia_root_path = None
+chia_node_id = None
 
 
 @api.route('/get_blockchain_state', methods=['GET'])
@@ -65,7 +66,8 @@ def get_harvester_plots_valid():
     url = 'https://localhost:8559/get_harvester_plots_valid'
     cert = '{}/config/ssl/farmer/private_farmer.crt'.format(chia_root_path)
     key = '{}/config/ssl/farmer/private_farmer.key'.format(chia_root_path)
-    return make_request(url, cert, key)
+    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 1}
+    return make_request(url, cert, key, data)
 
 
 @api.route('/get_harvester_plots_invalid', methods=['GET'])
@@ -73,7 +75,8 @@ def get_harvester_plots_invalid():
     url = 'https://localhost:8559/get_harvester_plots_invalid'
     cert = '{}/config/ssl/farmer/private_farmer.crt'.format(chia_root_path)
     key = '{}/config/ssl/farmer/private_farmer.key'.format(chia_root_path)
-    return make_request(url, cert, key)
+    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 1}
+    return make_request(url, cert, key, data)
 
 
 @api.route('/get_harvester_plots_keys_missing', methods=['GET'])
@@ -100,17 +103,22 @@ def get_plots():
     return make_request(url, cert, key)
 
 
-def make_request(url, cert, key):
+def make_request(url, cert, key, post_data=None):
+    if post_data is None:
+        post_data = {}
     context = (cert, key)
-    response = requests.post(url, data='{}', headers=headers, cert=context, verify=False)
+    response = requests.post(url, json=post_data, headers=headers, cert=context, verify=False)
     return response.json()
 
 
 @click.command()
-@click.option('--chia_root', '-c', default='')
-def main(chia_root):
+@click.option('--chia_root', '-c', help='path of chia install')
+@click.option('--node_id', '-n', help='This node\'s node_id, obtainable from the get_harvesters RPC')
+def main(chia_root, node_id):
     global chia_root_path
     chia_root_path = chia_root
+    global chia_node_id
+    chia_node_id = node_id
     api.run()
 
 
