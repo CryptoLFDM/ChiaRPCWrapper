@@ -92,7 +92,8 @@ def get_harvester_plots_duplicates():
     url = 'https://localhost:8559/get_harvester_plots_duplicates'
     cert = '{}/config/ssl/farmer/private_farmer.crt'.format(chia_root_path)
     key = '{}/config/ssl/farmer/private_farmer.key'.format(chia_root_path)
-    return make_request(url, cert, key)
+    data = {'node_id': chia_node_id, 'page': 0, 'page_size': 999999}
+    return make_request(url, cert, key, data)
 
 
 @api.route('/get_plots', methods=['GET'])
